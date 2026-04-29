@@ -1,8 +1,6 @@
 streamlit
-pybaseball
 pandas
-numpy
 requests
-matplotlib
-seaborn
-plotly
+pybaseball
+matplotlib    
+seaborn       
