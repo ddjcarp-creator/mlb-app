@@ -5,6 +5,9 @@ from pybaseball import statcast
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# --------------------------
+# HITTER TABLE
+# --------------------------
 def get_statcast_hitter_table():
     end = datetime.today().date()
     start = end - timedelta(days=30)
@@ -19,12 +22,19 @@ def get_statcast_hitter_table():
 
     g.columns = ["Hitter", "EV", "LA", "xwOBA", "BIP"]
 
-    g["HH%"] = (df.groupby("player_name")["launch_speed"]
-                .apply(lambda x: (x >= 95).mean())
-                .tolist())
+    # Hard-hit percentage
+    g["HH%"] = (
+        df.groupby("player_name")["launch_speed"]
+        .apply(lambda x: (x >= 95).mean())
+        .tolist()
+    )
 
     return g.sort_values("xwOBA", ascending=False)
 
+
+# --------------------------
+# PITCHER TABLE
+# --------------------------
 def get_statcast_pitcher_table():
     end = datetime.today().date()
     start = end - timedelta(days=30)
@@ -40,6 +50,10 @@ def get_statcast_pitcher_table():
     p.columns = ["Pitcher", "Velo", "EffVelo", "HorizBreak", "VertBreak"]
     return p.sort_values("Velo", ascending=False)
 
+
+# --------------------------
+# ZONE HEATMAP
+# --------------------------
 def get_zone_map(player):
     end = datetime.today().date()
     start = end - timedelta(days=60)
@@ -57,6 +71,10 @@ def get_zone_map(player):
     ax.set_title(f"Zone Map: {player}")
     return fig
 
+
+# --------------------------
+# ROLLING xwOBA
+# --------------------------
 def get_rolling_xwoba(player):
     end = datetime.today().date()
     start = end - timedelta(days=90)
