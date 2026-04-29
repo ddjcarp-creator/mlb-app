@@ -1,19 +1,25 @@
-import streamlit as st
+import requests
 import pandas as pd
-import numpy as np
-from utils.statcast_utils import get_statcast_hitter_table
-from utils.mlb_api import get_probable_pitchers
 
-st.title("Matchup Dashboard")
+def get_probable_pitchers(date):
+    date_str = date.strftime("%Y-%m-%d")
+    url = f"[statsapi.mlb.com](https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={date_str}&hydrate=probablePitcher)"
+    data = requests.get(url).json()
 
-date = st.date_input("Game Date")
+    matchups = []
 
-# Probable pitchers from MLB API
-matchups = get_probable_pitchers(date)
-st.subheader("Today's Matchups")
-st.dataframe(matchups, use_container_width=True)
+    for day in data.get("dates", []):
+        for game in day.get("games", []):
+            away = game["teams"]["away"]["team"]["name"]
+            home = game["teams"]["home"]["team"]["name"]
 
-# Statcast hitter performance
-st.subheader("Hitter Performance (Last 30 Days)")
-df = get_statcast_hitter_table()
-st.dataframe(df, use_container_width=True)
+            away_p = game["teams"]["away"].get("probablePitcher", {}).get("fullName", "TBD")
+            home_p = game["teams"]["home"].get("probablePitcher", {}).get("fullName", "TBD")
+
+            matchups.append({
+                "Matchup": f"{away} @ {home}",
+                "Away Pitcher": away_p,
+                "Home Pitcher": home_p
+            })
+
+    return pd.DataFrame(matchups)
