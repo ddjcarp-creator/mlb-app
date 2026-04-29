@@ -4,3 +4,8 @@ requests
 pybaseball
 matplotlib    
 seaborn       
+streamlit
+pybaseball
+pandas
+matplotlib
+numpy
