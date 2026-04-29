@@ -11,3 +11,4 @@ if search:
     df = df[df["Pitcher"].str.contains(search, case=False)]
 
 st.dataframe(df, use_container_width=True)
+
