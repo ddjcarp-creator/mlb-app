@@ -23,9 +23,11 @@ def get_statcast_hitter_table():
 
     g.columns = ["Hitter", "EV", "LA", "xwOBA", "BIP"]
 
-    g["HH%"] = (df.groupby("player_name")["launch_speed"]
-                .apply(lambda x: (x >= 95).mean())
-                .values)
+    g["HH%"] = (
+        df.groupby("player_name")["launch_speed"]
+        .apply(lambda x: (x >= 95).mean())
+        .values
+    )
 
     return g.sort_values("xwOBA", ascending=False)
 
